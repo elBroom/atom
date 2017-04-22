@@ -26,6 +26,11 @@ public class Broker {
         log.info("RECEIVED: " + msg);
         Message message = JsonHelper.fromJson(msg, Message.class);
         //TODO TASK2 implement message processing
+        if (message.getTopic() == Topic.PLANT_BOMB || message.getTopic() == Topic.MOVE) {
+            log.info("receive [" + Topic.PLANT_BOMB + "] message: " + message.getData());
+        } else {
+            log.info("receive another topic");
+        }
     }
 
     public void send(@NotNull String player, @NotNull Topic topic, @NotNull Object object) {

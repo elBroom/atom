@@ -1,7 +1,12 @@
 package ru.atom.lecture08.websocket;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
+import ru.atom.lecture08.websocket.message.Message;
+import ru.atom.lecture08.websocket.message.Topic;
+import ru.atom.lecture08.websocket.network.Broker;
+
 
 public class EventHandler extends WebSocketAdapter {
     @Override
@@ -14,6 +19,7 @@ public class EventHandler extends WebSocketAdapter {
     public void onWebSocketText(String message) {
         super.onWebSocketText(message);
         System.out.println("Received TEXT message: " + message);
+        Broker.getInstance().receive(getSession(), message);
     }
 
     @Override
