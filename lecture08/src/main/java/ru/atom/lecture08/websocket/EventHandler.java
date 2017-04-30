@@ -7,7 +7,6 @@ import ru.atom.lecture08.websocket.message.Message;
 import ru.atom.lecture08.websocket.message.Topic;
 import ru.atom.lecture08.websocket.network.Broker;
 
-
 public class EventHandler extends WebSocketAdapter {
     @Override
     public void onWebSocketConnect(Session sess) {
