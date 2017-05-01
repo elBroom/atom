@@ -32,7 +32,7 @@
         <property name="hibernate.current_session_context_class">thread</property>
 
         <!--mapping-->
-        <mapping class="ru.atom.http.server.model.User"/>
-        <mapping class="ru.atom.http.server.model.Token"/>
+        <mapping class="ru.atom.game.model.User"/>
+        <mapping class="ru.atom.game.model.Token"/>
     </session-factory>
 </hibernate-configuration>
