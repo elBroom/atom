@@ -4,10 +4,11 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.atom.game.event.EventServlet;
+import ru.atom.game.dao.Database;
 
 public class EventServer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        Database.setUp();
         Server server = new Server();
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(8090);

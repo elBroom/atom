@@ -10,6 +10,7 @@ public class GameSession implements Tickable {
     private static final Logger log = LogManager.getLogger(GameSession.class);
     private static int id = 0;
     private List<GameObject> gameObjects = new ArrayList<>();
+    // TODO Save Action PLANT_BOMB, MOVE
 
     public static int createId() {
         return id++;
@@ -24,6 +25,7 @@ public class GameSession implements Tickable {
     }
 
     @Override
+    // TODO reaction on action
     public void tick(long elapsed) {
         log.info("tick");
         ArrayList<Temporary> dead = new ArrayList<>();
@@ -37,4 +39,6 @@ public class GameSession implements Tickable {
         }
         gameObjects.removeAll(dead);
     }
+
+    // TODO get object with change state
 }

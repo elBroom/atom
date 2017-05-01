@@ -25,8 +25,8 @@ public class Broker {
     public void receive(@NotNull Session session, @NotNull String msg) {
         log.info("RECEIVED: " + msg);
         Message message = JsonHelper.fromJson(msg, Message.class);
-        //TODO TASK2 implement message processing
         if (message.getTopic() == Topic.PLANT_BOMB || message.getTopic() == Topic.MOVE) {
+            // TODO send PLANT_BOMB and MOVE to GameSession
             log.info("receive [" + Topic.PLANT_BOMB + "] message: " + message.getData());
         } else {
             log.info("receive another topic");

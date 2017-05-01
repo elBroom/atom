@@ -50,6 +50,10 @@ public class User {
         return name;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public boolean changePassword(String oldPassword, String newPassword)
             throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if (this.validPassword(oldPassword)) {
