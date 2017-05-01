@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import ru.atom.game.model.Game;
-import ru.atom.game.model.Score;
 
 /**
  * Created by zarina on 01.05.17.
@@ -29,8 +28,9 @@ public class GameDao {
     }
 
     public Game getById(Session session, Integer game) {
+
         return (Game) session
-                .createQuery("from Game g where g.id = :game")
+                .createQuery("from Game where id = :game")
                 .setParameter("game", game)
                 .uniqueResult();
     }

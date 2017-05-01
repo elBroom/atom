@@ -45,6 +45,9 @@ public class Game {
     @CreationTimestamp
     private Date createAt;
 
+    @Column(name = "sublink", nullable = false)
+    private String sublink;
+
     public Integer getId() {
         return id;
     }
@@ -65,13 +68,26 @@ public class Game {
         return player4;
     }
 
-    public List<User> allUser() {
+    public List<User> allUsers() {
         List<User> lst = new ArrayList<>();
         lst.add(player1);
         lst.add(player2);
         lst.add(player3);
         lst.add(player4);
         return lst;
+    }
+
+    public Game setAllUsers(List<User> users) {
+        player1 = users.get(0);
+        player2 = users.get(1);
+        player3 = users.get(2);
+        player4 = users.get(3);
+        return this;
+    }
+
+    public Game setSublink(String sublink) {
+        this.sublink = sublink;
+        return this;
     }
 
     @Override

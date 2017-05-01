@@ -29,7 +29,7 @@ public class Score {
     @OneToOne(cascade = CascadeType.PERSIST)
     private Game game;
 
-    @Column(name = "value", nullable = false)
+    @Column(name = "score", nullable = false)
     private Integer value;
 
     public Integer getId() {

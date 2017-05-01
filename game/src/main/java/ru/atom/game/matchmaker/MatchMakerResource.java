@@ -5,16 +5,15 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.atom.game.auth.Authorized;
-import ru.atom.game.dao.Database;
+import ru.atom.game.dao.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import ru.atom.game.dao.GameDao;
-import ru.atom.game.dao.ScoreDao;
-import ru.atom.game.dao.UserDao;
 import ru.atom.game.model.Game;
 import ru.atom.game.model.Score;
+import ru.atom.game.model.Token;
 import ru.atom.game.model.User;
+import ru.atom.game.util.ThreadSafeQueue;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
@@ -34,13 +33,19 @@ public class MatchMakerResource {
     @Path("/join")
     public Response join(@HeaderParam(HttpHeaders.AUTHORIZATION) String tokenParam) {
         Response response;
-        String token = tokenParam.substring("Bearer".length()).trim();
-        log.info("Join with token " + token);
+        String s_token = tokenParam.substring("Bearer".length()).trim();
+        log.info("Join with token " + s_token);
         Transaction txn = null;
         try (Session session = Database.session()) {
             txn = session.beginTransaction();
-
-            response = Response.ok("ok").build();
+            Token token = TokenDao.getInstance().getByToken(session, s_token);
+            if (token == null) {
+                log.info("Token not found");
+                response = Response.status(Response.Status.BAD_REQUEST).build();
+            } else {
+                ThreadSafeQueue.getInstance().offer(token.getUser());
+                response = Response.ok("localhost:8080/game/" + MatchMaker.getIdMatch()).build();
+            }
 
             txn.commit();
         } catch (RuntimeException e) {

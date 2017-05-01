@@ -27,7 +27,28 @@
 
 <script>
     function newGame() {
-        alert("Reguest Match Maker here")
+        if (Cookies.get('user') === undefined
+            || Cookies.get('token') === undefined) {
+
+            window.location = "/login.html";
+        }
+
+        var settings = {
+            "method": "POST",
+            "crossDomain": true,
+            "url": location.hostname + ":8080/mm/join",
+            headers: {
+                'Authorization': 'Bearer ' + Cookies.get('token')
+            }
+        };
+
+        $.ajax(settings).done(function(response) {
+           // window.location = response;
+           console.log(response);
+        }).fail(function (jqXHR, textStatus) {
+            alert(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
+            console.log(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
+        });
     }
 </script>
 

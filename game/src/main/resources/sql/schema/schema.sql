@@ -31,6 +31,7 @@ create table game.game (
   player3 integer      not null references game.user,
   player4 integer      not null references game.user,
   create_at   timestamp    not null,
+  sublink varchar(140) not null,
 
   primary key (id)
 );
