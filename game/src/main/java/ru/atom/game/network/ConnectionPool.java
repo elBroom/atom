@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionPool {
@@ -47,6 +48,10 @@ public class ConnectionPool {
 
     public String getPlayer(Session session) {
         return pool.get(session);
+    }
+
+    public Set<Map.Entry<Session, String>> getPlayers() {
+        return pool.entrySet();
     }
 
     public Session getSession(String player) {

@@ -13,6 +13,7 @@ public class Wall implements Positionable, Tickable {
     private final int id;
     private Point position;
     private long lifeTime;
+    private String type = "Wall";
 
     public Wall(Point position) {
         this.id = GameSession.createId();
@@ -23,6 +24,11 @@ public class Wall implements Positionable, Tickable {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override

@@ -12,6 +12,7 @@ public class Bomb implements Positionable, Temporary {
     private final int id;
     private Point position;
     private long lifeTime;
+    private String type = "Bomb";
 
     public Bomb(Point position, long lifeTime) {
         if (lifeTime <= 0) {
@@ -27,6 +28,11 @@ public class Bomb implements Positionable, Temporary {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override

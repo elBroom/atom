@@ -38,8 +38,7 @@ public class EventHandler extends WebSocketAdapter {
                 } else {
                     User player = token.getUser();
                     ConnectionPool.getInstance().add(sess, player.getName());
-                    Broker.getInstance().send(player.getName(), Topic.POSSESS, player.getId());
-                    log.info(Topic.POSSESS + " sended");
+                    log.info("add to ConnectionPool");
                 }
                 txn.commit();
             } catch (RuntimeException e) {

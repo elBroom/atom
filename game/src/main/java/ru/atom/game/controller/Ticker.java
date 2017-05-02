@@ -2,11 +2,14 @@ package ru.atom.game.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.websocket.api.Session;
 import ru.atom.game.message.Topic;
 import ru.atom.game.model.GameSession;
 import ru.atom.game.network.Broker;
+import ru.atom.game.network.ConnectionPool;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
@@ -18,7 +21,18 @@ public class Ticker {
     private static Object lock = new Object();
     private GameSession gameSession;
 
-    // TODO Start loop
+    public Ticker(GameSession gameSession) {
+        this.gameSession = gameSession;
+    }
+
+    public void init() {
+        log.info("gameSession init");
+        gameSession.init();
+        for(Map.Entry<Session, String> entry : ConnectionPool.getInstance().getPlayers()) {
+            Broker.getInstance().send(entry.getValue(), Topic.POSSESS, gameSession.getIdPlayer());
+        }
+    }
+
     public void loop() {
         while (!Thread.currentThread().isInterrupted()) {
             long started = System.currentTimeMillis();
@@ -38,8 +52,7 @@ public class Ticker {
     private void act(long time) {
         synchronized (lock) {
             gameSession.tick(time);
-            // TODO get Object for REPLICA
-            Broker.getInstance().broadcast(Topic.REPLICA, new ArrayList<Object>());
+            Broker.getInstance().broadcast(Topic.REPLICA, gameSession.getGameObjects());
         }
     }
 

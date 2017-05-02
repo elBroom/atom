@@ -8,4 +8,6 @@ public interface GameObject {
      * Unique id
      */
     int getId();
+
+    String getType();
 }

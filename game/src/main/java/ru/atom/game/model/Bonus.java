@@ -11,8 +11,9 @@ public class Bonus implements Positionable, Tickable {
     private static final Logger log = LogManager.getLogger(Bonus.class);
     private final int id;
     private Point position;
-    private BonusType type;
+    private BonusType bonusType;
     private long lifeTime;
+    private String type;
 
     public enum BonusType {
         SNEAKERS, BOMB, BURST
@@ -21,13 +22,18 @@ public class Bonus implements Positionable, Tickable {
     public Bonus(Point position, BonusType type) {
         this.id = GameSession.createId();
         this.position = position;
-        this.type = type;
+        this.bonusType = type;
         log.info("create object id={}, x={}, y={}, type={}", id, position.getX(), position.getY(), type);
     }
 
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class Bonus implements Positionable, Tickable {
         lifeTime += elapsed;
     }
 
-    public BonusType getType() {
-        return type;
+    public BonusType getBonusType() {
+        return bonusType;
     }
 }

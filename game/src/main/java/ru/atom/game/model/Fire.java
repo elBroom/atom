@@ -12,6 +12,7 @@ public class Fire implements Positionable, Tickable {
     private final int id;
     private Point position;
     private long lifeTime;
+    private String type = "Fire";
 
     public Fire(Point position) {
         this.id = GameSession.createId();
@@ -22,6 +23,11 @@ public class Fire implements Positionable, Tickable {
     @Override
     public int getId() {
         return id;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override

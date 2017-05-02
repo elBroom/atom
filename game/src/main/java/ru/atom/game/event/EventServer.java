@@ -4,7 +4,9 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import ru.atom.game.controller.Ticker;
 import ru.atom.game.dao.Database;
+import ru.atom.game.model.GameSession;
 
 public class EventServer {
     public static void main(String[] args) throws Exception {
@@ -26,6 +28,10 @@ public class EventServer {
 
         try {
             server.start();
+//            GameSession gameSession = new GameSession();
+//            Ticker ticker = new Ticker(gameSession);
+//            ticker.init();
+//            ticker.loop();
             server.dump(System.err);
             server.join();
         } catch (Throwable t) {

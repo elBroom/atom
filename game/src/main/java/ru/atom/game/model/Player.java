@@ -11,9 +11,10 @@ public class Player implements Movable {
     private static final Logger log = LogManager.getLogger(Player.class);
     private int id;
     private Point position;
-    private PlayerType type;
+    private PlayerType playerType;
     private int speed;
     private long lifeTime;
+    private String type = "Pawn";
 
     public enum PlayerType {
         BOY, GIRL
@@ -25,7 +26,7 @@ public class Player implements Movable {
         }
         this.id = GameSession.createId();
         this.position = position;
-        this.type = type;
+        this.playerType = type;
         this.speed = speed;
         log.info("create object id={}, x={}, y={}, type={}, spped={}", id, position.getX(), position.getY(),
                 type, speed);
@@ -37,12 +38,17 @@ public class Player implements Movable {
     }
 
     @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
     public Point getPosition() {
         return position;
     }
 
-    public PlayerType getType() {
-        return type;
+    public PlayerType getPlayerType() {
+        return playerType;
     }
 
     public int getSpeed() {
