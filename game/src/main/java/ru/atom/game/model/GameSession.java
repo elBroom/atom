@@ -45,17 +45,19 @@ public class GameSession implements Tickable {
                 }
             }
         }
+
+        int sizeTile = 32;
         // Create Players
-        Player player1 = new Player(new Point(1, 1), Player.PlayerType.BOY, 1);
+        Player player1 = new Player(new Point(1 * sizeTile, 1 * sizeTile), Player.PlayerType.BOY, 1);
         addGameObject(player1);
         players.add(player1);
-        Player player2 = new Player(new Point(1, MAX_Y - 2), Player.PlayerType.BOY, 1);
+        Player player2 = new Player(new Point(1 * sizeTile, (MAX_Y - 2) * sizeTile), Player.PlayerType.BOY, 1);
         addGameObject(player2);
         players.add(player2);
-        Player player3 = new Player(new Point(MAX_X - 2, 1), Player.PlayerType.BOY, 1);
+        Player player3 = new Player(new Point((MAX_X - 2) * sizeTile, 1 * sizeTile), Player.PlayerType.BOY, 1);
         addGameObject(player3);
         players.add(player3);
-        Player player4 = new Player(new Point(MAX_X - 2, MAX_Y - 2), Player.PlayerType.BOY, 1);
+        Player player4 = new Player(new Point((MAX_X - 2) * sizeTile, (MAX_Y - 2) * sizeTile), Player.PlayerType.BOY, 1);
         addGameObject(player4);
         players.add(player4);
     }

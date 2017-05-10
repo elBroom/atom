@@ -23,15 +23,16 @@ public class EventHandler extends WebSocketAdapter {
     @Override
     public void onWebSocketConnect(Session sess) {
         super.onWebSocketConnect(sess);
-        List<String> tokens = sess.getUpgradeRequest().getParameterMap().get("token");
-        if (tokens.isEmpty()) {
+        List<String> params = sess.getUpgradeRequest().getParameterMap().get("id");
+        if (params.isEmpty()) {
             log.info("Params empty");
             sess.close();
         } else {
-            Transaction txn = null;
             try (org.hibernate.Session session = Database.session()) {
-                txn = session.beginTransaction();
-                Token token = TokenDao.getInstance().getByToken(session, tokens.get(0));
+                String s_match = params.get(0).substring(0, 36);
+                String s_token = params.get(0).substring(36);
+                System.out.println(s_match);
+                Token token = TokenDao.getInstance().getByToken(session, s_token);
                 if (token == null) {
                     log.info("Token not found");
                     sess.close();
@@ -40,13 +41,9 @@ public class EventHandler extends WebSocketAdapter {
                     ConnectionPool.getInstance().add(sess, player.getName());
                     log.info("add to ConnectionPool");
                 }
-                txn.commit();
             } catch (RuntimeException e) {
-                if (txn != null && txn.isActive()) {
                     log.error("Transaction failed.", e);
-                    txn.rollback();
                     sess.close();
-                }
             }
         }
     }

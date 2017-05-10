@@ -32,7 +32,7 @@ ServerProxy = Class.extend({
 
     initSocket: function() {
         var self = this;
-        this.socket = new WebSocket("ws://" + this.host + "/events?token="+Utils.getCookies('token'));
+        this.socket = new WebSocket("ws://" + this.host + "/events" + location.search);
 
         this.socket.onopen = function() {
             console.log("Connection established.");
