@@ -1,4 +1,4 @@
-package ru.atom.game.event;
+package ru.atom.game.game;
 
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -9,7 +9,7 @@ import ru.atom.game.util.JsonHelper;
 import java.net.URI;
 import java.util.concurrent.Future;
 
-public class EventClient {
+public class GameClient {
     public static void main(String[] args) {
         URI uri = URI.create("ws://wtfis.ru:8090/events/");//CHANGE TO wtfis.ru for task
 
@@ -19,7 +19,7 @@ public class EventClient {
             try {
                 client.start();
                 // The socket that receives events
-                EventHandler socket = new EventHandler();
+                GameHandler socket = new GameHandler();
                 // Attempt Connect
                 Future<Session> fut = client.connect(socket, uri);
                 // Wait for Connect

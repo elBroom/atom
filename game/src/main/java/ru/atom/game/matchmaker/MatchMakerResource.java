@@ -44,7 +44,8 @@ public class MatchMakerResource {
                 response = Response.status(Response.Status.BAD_REQUEST).build();
             } else {
                 ThreadSafeQueue.getInstance().offer(token.getUser());
-                response = Response.ok("localhost:8090/game/?id=" + MatchMaker.getIdMatch() + token).build();
+                while (MatchMaker.getLink(token.getUser()) == null);
+                response = Response.ok("localhost:8090/game/?id=" + MatchMaker.popLink(token.getUser())).build();
             }
 
             txn.commit();

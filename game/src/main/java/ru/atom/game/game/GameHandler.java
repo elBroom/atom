@@ -1,15 +1,12 @@
-package ru.atom.game.event;
+package ru.atom.game.game;
 
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import org.hibernate.Transaction;
 import ru.atom.game.dao.Database;
 import ru.atom.game.dao.TokenDao;
-import ru.atom.game.matchmaker.MatchMaker;
-import ru.atom.game.message.Topic;
 import ru.atom.game.model.Token;
 import ru.atom.game.model.User;
 import ru.atom.game.network.Broker;
@@ -17,8 +14,8 @@ import ru.atom.game.network.ConnectionPool;
 
 import java.util.List;
 
-public class EventHandler extends WebSocketAdapter {
-    private static final Logger log = LogManager.getLogger(EventHandler.class);
+public class GameHandler extends WebSocketAdapter {
+    private static final Logger log = LogManager.getLogger(GameHandler.class);
 
     @Override
     public void onWebSocketConnect(Session sess) {

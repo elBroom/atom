@@ -1,4 +1,4 @@
-package ru.atom.game.event;
+package ru.atom.game.game;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -12,7 +12,7 @@ import ru.atom.game.controller.Ticker;
 import ru.atom.game.dao.Database;
 import ru.atom.game.model.GameSession;
 
-public class EventServer {
+public class GameServer {
     public static void main(String[] args) throws Exception {
         Database.setUp();
         Server server = new Server();
@@ -34,15 +34,15 @@ public class EventServer {
         server.setHandler(contexts);
 
         // Add a websocket to a specific path spec
-        ServletHolder holderEvents = new ServletHolder("ws-events", EventServlet.class);
+        ServletHolder holderEvents = new ServletHolder("ws-events", GameServlet.class);
         context.addServlet(holderEvents, "/events/*");
 
         try {
             server.start();
-//            GameSession gameSession = new GameSession();
-//            Ticker ticker = new Ticker(gameSession);
-//            ticker.init();
-//            ticker.loop();
+            GameSession gameSession = new GameSession();
+            Ticker ticker = new Ticker(gameSession);
+            ticker.init();
+            ticker.loop();
             server.dump(System.err);
             server.join();
         } catch (Throwable t) {

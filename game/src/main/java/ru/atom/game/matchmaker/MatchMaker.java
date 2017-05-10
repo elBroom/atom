@@ -13,6 +13,7 @@ import ru.atom.game.util.ThreadSafeQueue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -22,6 +23,7 @@ public class MatchMaker implements Runnable {
     private static final Logger log = LogManager.getLogger(MatchMaker.class);
     public static final int PLAYERS_IN_GAME = 4;
     private static String idMatch;
+    private  static ConcurrentHashMap<User, String> memory = new ConcurrentHashMap<User, String>();
 
     @Override
     public void run() {
@@ -42,6 +44,9 @@ public class MatchMaker implements Runnable {
                 try (Session session = Database.session()) {
                     txn = session.beginTransaction();
                     Game game = new Game().setSublink(idMatch).setAllUsers(candidates);
+                    for (User candidate: candidates) {
+                        memory.put(candidate, idMatch);
+                    }
                     GameDao.getInstance().insert(session, game);
                     txn.commit();
                 } catch (RuntimeException e) {
@@ -59,6 +64,18 @@ public class MatchMaker implements Runnable {
     public static String getIdMatch() {
         return idMatch;
     }
+
+    public static String getLink(User user) {
+        return memory.get(user);
+    }
+
+    public static String popLink(User user) {
+        String link = memory.get(user);
+        memory.remove(user);
+        return link;
+    }
+
+
 
     private String stringGenerate() {
         return UUID.randomUUID().toString();
