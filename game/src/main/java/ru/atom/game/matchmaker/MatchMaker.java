@@ -39,23 +39,11 @@ public class MatchMaker implements Runnable {
                 log.warn("Timeout reached");
             }
 
+            // TODO getLink from GameServer
+            // Отправляем 4х пользователей
+            // Получаем уникальные ссылки для каждого пользователя и расскладываем ссылки в memory
             if (candidates.size() == PLAYERS_IN_GAME) {
-                Transaction txn = null;
-                try (Session session = Database.session()) {
-                    txn = session.beginTransaction();
-                    Game game = new Game().setSublink(idMatch).setAllUsers(candidates);
-                    for (User candidate: candidates) {
-                        memory.put(candidate, idMatch);
-                    }
-                    GameDao.getInstance().insert(session, game);
-                    txn.commit();
-                } catch (RuntimeException e) {
-                    log.error("Transaction failed.", e);
-                    if (txn != null && txn.isActive()) {
-                        txn.rollback();
-                    }
-                }
-                idMatch = stringGenerate();
+
                 candidates.clear();
             }
         }

@@ -13,6 +13,11 @@ import ru.atom.game.dao.Database;
 import ru.atom.game.model.GameSession;
 
 public class GameServer {
+    private static GameSession gameSession;
+    public static GameSession getGameSession(){
+        return gameSession;
+    }
+
     public static void main(String[] args) throws Exception {
         Database.setUp();
         Server server = new Server();
@@ -39,9 +44,8 @@ public class GameServer {
 
         try {
             server.start();
-            GameSession gameSession = new GameSession();
+            gameSession = new GameSession();
             Ticker ticker = new Ticker(gameSession);
-            ticker.init();
             ticker.loop();
             server.dump(System.err);
             server.join();

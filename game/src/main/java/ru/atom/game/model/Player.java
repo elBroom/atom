@@ -15,6 +15,7 @@ public class Player implements Movable {
     private int speed;
     private long lifeTime;
     private String type = "Pawn";
+    private int sizeTile = 32;
 
     public enum PlayerType {
         BOY, GIRL
@@ -25,7 +26,7 @@ public class Player implements Movable {
             throw new IllegalArgumentException("Can't support negative speed");
         }
         this.id = GameSession.createId();
-        this.position = position;
+        this.position = new Point(position.getX() * sizeTile, position.getY() * sizeTile);
         this.playerType = type;
         this.speed = speed;
         log.info("create object id={}, x={}, y={}, type={}, spped={}", id, position.getX(), position.getY(),

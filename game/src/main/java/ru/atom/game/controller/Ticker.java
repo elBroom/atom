@@ -25,26 +25,18 @@ public class Ticker {
         this.gameSession = gameSession;
     }
 
-    public void init() {
-        log.info("gameSession init");
-        gameSession.init();
-        for(Map.Entry<Session, String> entry : ConnectionPool.getInstance().getPlayers()) {
-            Broker.getInstance().send(entry.getValue(), Topic.POSSESS, gameSession.getIdPlayer());
-        }
-    }
-
     public void loop() {
         while (!Thread.currentThread().isInterrupted()) {
             long started = System.currentTimeMillis();
             act(FRAME_TIME);
             long elapsed = System.currentTimeMillis() - started;
             if (elapsed < FRAME_TIME) {
-                log.info("All tick finish at {} ms", elapsed);
+//                log.info("All tick finish at {} ms", elapsed);
                 LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(FRAME_TIME - elapsed));
             } else {
                 log.warn("tick lag {} ms", elapsed - FRAME_TIME);
             }
-            log.info("{}: tick ", tickNumber);
+//            log.info("{}: tick ", tickNumber);
             tickNumber++;
         }
     }
@@ -52,7 +44,7 @@ public class Ticker {
     private void act(long time) {
         synchronized (lock) {
             gameSession.tick(time);
-            Broker.getInstance().broadcast(Topic.REPLICA, gameSession.getGameObjects());
+            Broker.getInstance().broadcast(gameSession, Topic.REPLICA, gameSession.getGameObjects());
         }
     }
 

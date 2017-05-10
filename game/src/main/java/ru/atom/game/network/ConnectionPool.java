@@ -1,11 +1,16 @@
 package ru.atom.game.network;
 
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.jetbrains.annotations.NotNull;
+import ru.atom.game.model.GameSession;
 
+import javax.persistence.Tuple;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,7 +20,7 @@ public class ConnectionPool {
     private static final ConnectionPool instance = new ConnectionPool();
     private static final int PARALLELISM_LEVEL = 4;
 
-    private final ConcurrentHashMap<Session, String> pool;
+    private final ConcurrentHashMap<Session, Pair<GameSession, Integer>> pool;
 
     public static ConnectionPool getInstance() {
         return instance;
@@ -34,8 +39,9 @@ public class ConnectionPool {
         }
     }
 
-    public void broadcast(@NotNull String msg) {
-        pool.forEachKey(PARALLELISM_LEVEL, session -> send(session, msg));
+    public void broadcast(@NotNull GameSession gameSession, @NotNull String msg) {
+        pool.entrySet().stream().filter(entry -> entry.getValue().getKey()
+                .equals(gameSession)).map(Map.Entry::getKey).forEach(session -> send(session, msg));
     }
 
     public void shutdown() {
@@ -46,25 +52,23 @@ public class ConnectionPool {
         });
     }
 
-    public String getPlayer(Session session) {
-        return pool.get(session);
+    public GameSession getGameSession(Session session) {
+        return pool.get(session).getKey();
     }
 
-    public Set<Map.Entry<Session, String>> getPlayers() {
-        return pool.entrySet();
+    public Integer getPlayerId(Session session) {
+        return pool.get(session).getValue();
     }
 
-    public Session getSession(String player) {
+    public Iterator<Session> getSessions(GameSession gameSession) {
         return pool.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(player))
-                .map(Map.Entry::getKey)
-                .findFirst()
-                .orElseGet(null);
+                .filter(entry -> entry.getValue().getKey().equals(gameSession))
+                .map(Map.Entry::getKey).iterator();
     }
 
-    public void add(Session session, String player) {
-        if (pool.putIfAbsent(session, player) == null) {
-            log.info("{} joined", player);
+    public void add(Session session, GameSession gameSession, Integer playerId) {
+        if (pool.putIfAbsent(session, new Pair<>(gameSession, playerId)) == null) {
+            log.info("create gameSession ");
         }
     }
 

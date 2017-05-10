@@ -7,6 +7,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import ru.atom.game.dao.Database;
 import ru.atom.game.dao.TokenDao;
+import ru.atom.game.message.Topic;
+import ru.atom.game.model.GameSession;
 import ru.atom.game.model.Token;
 import ru.atom.game.model.User;
 import ru.atom.game.network.Broker;
@@ -25,23 +27,12 @@ public class GameHandler extends WebSocketAdapter {
             log.info("Params empty");
             sess.close();
         } else {
-            try (org.hibernate.Session session = Database.session()) {
-                String s_match = params.get(0).substring(0, 36);
-                String s_token = params.get(0).substring(36);
-                System.out.println(s_match);
-                Token token = TokenDao.getInstance().getByToken(session, s_token);
-                if (token == null) {
-                    log.info("Token not found");
-                    sess.close();
-                } else {
-                    User player = token.getUser();
-                    ConnectionPool.getInstance().add(sess, player.getName());
-                    log.info("add to ConnectionPool");
-                }
-            } catch (RuntimeException e) {
-                    log.error("Transaction failed.", e);
-                    sess.close();
-            }
+            // TODO check id and get GameSession from Hash
+            GameSession gameSession = GameServer.getGameSession();
+            Integer playerId = gameSession.getIdPlayer();
+            ConnectionPool.getInstance().add(sess, gameSession, playerId);
+
+            Broker.getInstance().send(sess, Topic.POSSESS, playerId);
         }
     }
 
