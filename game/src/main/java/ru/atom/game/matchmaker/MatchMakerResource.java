@@ -1,5 +1,6 @@
 package ru.atom.game.matchmaker;
 
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -43,10 +44,10 @@ public class MatchMakerResource {
             } else {
                 ThreadSafeQueueUser.getInstance().offer(token.getUser());
                 while (MatchMaker.getLink(token.getUser()) == null);
-                String link = MatchMaker.popLink(token.getUser());
-                Game game = new Game().setSublink(link).setUser(token.getUser());
+                Pair<String, String> link = MatchMaker.popLink(token.getUser());
+                Game game = new Game().setSublink(link.getValue()).setUser(token.getUser());
                 GameDao.getInstance().insert(session, game);
-                response = Response.ok("localhost:8090/game/?id=" + link).build();
+                response = Response.ok("http://" + link.getKey() + "/game/?id=" + link.getValue()).build();
             }
 
             txn.commit();

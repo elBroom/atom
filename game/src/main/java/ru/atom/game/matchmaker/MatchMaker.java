@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class MatchMaker implements Runnable {
     private static final Logger log = LogManager.getLogger(MatchMaker.class);
     public static final int PLAYERS_IN_GAME = 4;
-    private  static ConcurrentHashMap<User, String> memory = new ConcurrentHashMap<>();
+    private  static ConcurrentHashMap<User, Pair<String, String>> memory = new ConcurrentHashMap<>();
 
     @Override
     public void run() {
@@ -49,7 +49,7 @@ public class MatchMaker implements Runnable {
                 } else {
                     log.info("Save links");
                     for (User candidate: candidates) {
-                        memory.put(candidate, links.pop());
+                        memory.put(candidate, new Pair<>(gsInfo.getValue(), links.pop()));
                     }
                 }
                 candidates.clear();
@@ -57,12 +57,12 @@ public class MatchMaker implements Runnable {
         }
     }
 
-    public static String getLink(User user) {
+    public static Pair<String, String> getLink(User user) {
         return memory.get(user);
     }
 
-    public static String popLink(User user) {
-        String link = memory.get(user);
+    public static Pair<String, String> popLink(User user) {
+        Pair<String, String> link = memory.get(user);
         memory.remove(user);
         return link;
     }
