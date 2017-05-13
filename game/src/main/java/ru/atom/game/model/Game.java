@@ -25,68 +25,40 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @JoinColumn(name = "player1", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @OneToOne(cascade = CascadeType.PERSIST)
-    private User player1;
+    private User user;
 
-    @JoinColumn(name = "player2", nullable = false)
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private User player2;
+    @Column(name = "sublink", nullable = false)
+    private String sublink;
 
-    @JoinColumn(name = "player3", nullable = false)
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private User player3;
-
-    @JoinColumn(name = "player4", nullable = false)
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private User player4;
+    @Column(name = "score")
+    private Integer score;
 
     @Column(name = "create_at")
     @CreationTimestamp
     private Date createAt;
 
-    @Column(name = "sublink", nullable = false)
-    private String sublink;
-
     public Integer getId() {
         return id;
     }
 
-    public User getPlayer1() {
-        return player1;
+    public User getUser() {
+        return user;
     }
 
-    public User getPlayer2() {
-        return player2;
-    }
-
-    public User getPlayer3() {
-        return player3;
-    }
-
-    public User getPlayer4() {
-        return player4;
-    }
-
-    public List<User> allUsers() {
-        List<User> lst = new ArrayList<>();
-        lst.add(player1);
-        lst.add(player2);
-        lst.add(player3);
-        lst.add(player4);
-        return lst;
-    }
-
-    public Game setAllUsers(List<User> users) {
-        player1 = users.get(0);
-        player2 = users.get(1);
-        player3 = users.get(2);
-        player4 = users.get(3);
+    public Game setUser(User user) {
+        this.user = user;
         return this;
     }
 
     public Game setSublink(String sublink) {
         this.sublink = sublink;
+        return this;
+    }
+
+    public Game setScore(Integer score) {
+        this.score = score;
         return this;
     }
 

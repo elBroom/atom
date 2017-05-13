@@ -10,9 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import ru.atom.game.model.Game;
-import ru.atom.game.model.Score;
 import ru.atom.game.model.Token;
-import ru.atom.game.model.User;
 import ru.atom.game.util.ThreadSafeQueueUser;
 
 import javax.ws.rs.*;
@@ -45,7 +43,10 @@ public class MatchMakerResource {
             } else {
                 ThreadSafeQueueUser.getInstance().offer(token.getUser());
                 while (MatchMaker.getLink(token.getUser()) == null);
-                response = Response.ok("localhost:8090/game/?id=" + MatchMaker.popLink(token.getUser())).build();
+                String link = MatchMaker.popLink(token.getUser());
+                Game game = new Game().setSublink(link).setUser(token.getUser());
+                GameDao.getInstance().insert(session, game);
+                response = Response.ok("localhost:8090/game/?id=" + link).build();
             }
 
             txn.commit();
@@ -76,25 +77,18 @@ public class MatchMakerResource {
         Transaction txn = null;
         try (Session session = Database.session()) {
             txn = session.beginTransaction();
-
-            Game game = GameDao.getInstance().getById(session, jobj.get("id").getAsInt());
-            if (game == null){
-                log.info("Game " + jobj.get("id") + " not found");
-                response = Response.status(Response.Status.BAD_REQUEST).build();
-            } else {
                 for (Map.Entry<String, JsonElement> result : jobj.get("result").getAsJsonObject().entrySet()) {
-                    User user = UserDao.getInstance().getByName(session, result.getKey());
-                    if (user == null){
-                        log.info("User " + result.getKey() + " not found");
+                    Game game = GameDao.getInstance().getBySublink(session, result.getKey());
+                    if (game == null){
+                        log.info("Game with sublink  " + result.getKey() + " not found");
                         txn.rollback();
                         return Response.status(Response.Status.BAD_REQUEST).build();
                     } else {
-                        Score score = new Score().setGame(game).setUser(user).setValue(result.getValue().getAsInt());
-                        ScoreDao.getInstance().insert(session, score);
+                        game.setScore(result.getValue().getAsInt());
+                        GameDao.getInstance().update(session, game);
                     }
                 }
                 response = Response.ok("ok").build();
-            }
             txn.commit();
         } catch (RuntimeException e) {
             log.error("Transaction failed.", e);

@@ -35,6 +35,5 @@
         <mapping class="ru.atom.game.model.User"/>
         <mapping class="ru.atom.game.model.Token"/>
         <mapping class="ru.atom.game.model.Game"/>
-        <mapping class="ru.atom.game.model.Score"/>
     </session-factory>
 </hibernate-configuration>

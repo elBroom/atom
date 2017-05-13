@@ -26,22 +26,10 @@ create table game.token (
 drop table if exists game.game;
 create table game.game (
   id    serial             not null,
-  player1 integer      not null references game.user,
-  player2 integer      not null references game.user,
-  player3 integer      not null references game.user,
-  player4 integer      not null references game.user,
-  create_at   timestamp    not null,
-  sublink varchar(140) not null,
-
-  primary key (id)
-);
-
-drop table if exists game.score;
-create table game.score (
-  id    serial             not null,
   user_id integer      not null references game.user on delete cascade,
+  sublink varchar(140) not null,
   score integer default 0,
-  game_id integer not null references game.game,
+  create_at   timestamp    not null,
 
   primary key (id)
 );

@@ -27,11 +27,10 @@ public class GameDao {
         session.saveOrUpdate(game);
     }
 
-    public Game getById(Session session, Integer game) {
-
+    public Game getBySublink(Session session, String sublink) {
         return (Game) session
-                .createQuery("from Game where id = :game")
-                .setParameter("game", game)
+                .createQuery("from Game where sublink = :sublink")
+                .setParameter("sublink", sublink)
                 .uniqueResult();
     }
 
