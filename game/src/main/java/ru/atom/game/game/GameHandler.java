@@ -5,14 +5,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.WebSocketAdapter;
-import ru.atom.game.dao.Database;
-import ru.atom.game.dao.TokenDao;
-import ru.atom.game.message.Topic;
-import ru.atom.game.model.GameSession;
-import ru.atom.game.model.Token;
-import ru.atom.game.model.User;
+import ru.atom.game.controller.Ticker;
 import ru.atom.game.network.Broker;
 import ru.atom.game.network.ConnectionPool;
+import ru.atom.game.network.GameSessionPool;
+import ru.atom.game.util.ThreadSafeQueueTicker;
 
 import java.util.List;
 
@@ -27,12 +24,21 @@ public class GameHandler extends WebSocketAdapter {
             log.info("Params empty");
             sess.close();
         } else {
-            // TODO check id and get GameSession from Hash
-            GameSession gameSession = GameServer.getGameSession();
-            Integer playerId = gameSession.getIdPlayer();
-            ConnectionPool.getInstance().add(sess, gameSession, playerId);
+            GameSession gameSession = GameSessionPool.getInstance().getGameSession(params.get(0));
+            if (gameSession == null) {
+                log.info("GameSession not found");
+                sess.close();
+            } else {
+                // Link work only one time
+                GameSessionPool.getInstance().remove(params.get(0));
+                ConnectionPool.getInstance().add(sess, gameSession, gameSession.getIdPlayer());
 
-            Broker.getInstance().send(sess, Topic.POSSESS, playerId);
+                if (GameSessionPool.getInstance().countGameSession(gameSession) < 1) {
+                    log.info("Add ticker");
+                    ThreadSafeQueueTicker.getInstance().offer(new Ticker(gameSession));
+                }
+            }
+
         }
     }
 

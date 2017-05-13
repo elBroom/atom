@@ -1,7 +1,7 @@
 package ru.atom.game;
 
 import ru.atom.game.geometry.Point;
-import ru.atom.game.model.GameSession;
+import ru.atom.game.game.GameSession;
 import ru.atom.game.model.Bomb;
 import ru.atom.game.model.Bonus;
 import ru.atom.game.model.Wood;

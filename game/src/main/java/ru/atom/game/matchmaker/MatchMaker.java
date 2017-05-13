@@ -1,18 +1,16 @@
 package ru.atom.game.matchmaker;
 
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import ru.atom.game.dao.Database;
-import ru.atom.game.dao.GameDao;
-import ru.atom.game.model.Game;
+import ru.atom.game.game.GameClient;
 import ru.atom.game.model.User;
-import ru.atom.game.util.ThreadSafeQueue;
+import ru.atom.game.util.ThreadSafeQueueUser;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -22,35 +20,41 @@ import java.util.concurrent.TimeUnit;
 public class MatchMaker implements Runnable {
     private static final Logger log = LogManager.getLogger(MatchMaker.class);
     public static final int PLAYERS_IN_GAME = 4;
-    private static String idMatch;
-    private  static ConcurrentHashMap<User, String> memory = new ConcurrentHashMap<User, String>();
+    private  static ConcurrentHashMap<User, String> memory = new ConcurrentHashMap<>();
 
     @Override
     public void run() {
         log.info("Started");
         List<User> candidates = new ArrayList<>(PLAYERS_IN_GAME);
-        idMatch = stringGenerate();
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 candidates.add(
-                        ThreadSafeQueue.getInstance().poll(10_000, TimeUnit.SECONDS)
+                    ThreadSafeQueueUser.getInstance().poll(10_000, TimeUnit.SECONDS)
                 );
             } catch (InterruptedException e) {
                 log.warn("Timeout reached");
             }
 
-            // TODO getLink from GameServer
-            // Отправляем 4х пользователей
             // Получаем уникальные ссылки для каждого пользователя и расскладываем ссылки в memory
             if (candidates.size() == PLAYERS_IN_GAME) {
-
+                log.info("Build game");
+                LinkedList<String> links = new LinkedList<>();
+                Pair<String, String> gsInfo = MatchMakerServer.getGameServer();
+                try {
+                    log.info("Get link from {}", gsInfo.getValue());
+                    links = GameClient.createGameSession(gsInfo.getValue(), gsInfo.getKey());
+                } catch (IOException e) {}
+                if (links.isEmpty()) {
+                    log.info("Links Empty");
+                } else {
+                    log.info("Save links");
+                    for (User candidate: candidates) {
+                        memory.put(candidate, links.pop());
+                    }
+                }
                 candidates.clear();
             }
         }
-    }
-
-    public static String getIdMatch() {
-        return idMatch;
     }
 
     public static String getLink(User user) {
@@ -63,9 +67,4 @@ public class MatchMaker implements Runnable {
         return link;
     }
 
-
-
-    private String stringGenerate() {
-        return UUID.randomUUID().toString();
-    }
 }

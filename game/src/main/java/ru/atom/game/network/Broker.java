@@ -6,7 +6,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.jetbrains.annotations.NotNull;
 import ru.atom.game.message.Message;
 import ru.atom.game.message.Topic;
-import ru.atom.game.model.GameSession;
+import ru.atom.game.game.GameSession;
 import ru.atom.game.model.Movable;
 import ru.atom.game.util.JsonHelper;
 

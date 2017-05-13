@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.atom.game.geometry.Point;
 import ru.atom.game.model.GameObject;
-import ru.atom.game.model.GameSession;
+import ru.atom.game.game.GameSession;
 import ru.atom.game.model.Movable;
 import ru.atom.game.model.Temporary;
 

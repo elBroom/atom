@@ -5,14 +5,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.jetbrains.annotations.NotNull;
-import ru.atom.game.model.GameSession;
+import ru.atom.game.game.GameSession;
 
-import javax.persistence.Tuple;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionPool {
@@ -68,7 +65,7 @@ public class ConnectionPool {
 
     public void add(Session session, GameSession gameSession, Integer playerId) {
         if (pool.putIfAbsent(session, new Pair<>(gameSession, playerId)) == null) {
-            log.info("create gameSession ");
+            log.info("add new connection");
         }
     }
 

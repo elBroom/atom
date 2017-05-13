@@ -8,21 +8,17 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.atom.game.controller.Ticker;
-import ru.atom.game.dao.Database;
-import ru.atom.game.model.GameSession;
+import ru.atom.game.controller.TickerStart;
 
 public class GameServer {
-    private static GameSession gameSession;
-    public static GameSession getGameSession(){
-        return gameSession;
-    }
+    public static final String KEY = "key12345678";
+    public static final Integer PORT = 8090;
+
 
     public static void main(String[] args) throws Exception {
-        Database.setUp();
         Server server = new Server();
         ServerConnector connector = new ServerConnector(server);
-        connector.setPort(8090);
+        connector.setPort(PORT);
         server.addConnector(connector);
 
         // Setup the basic application "context" for this application at "/"
@@ -41,12 +37,22 @@ public class GameServer {
         // Add a websocket to a specific path spec
         ServletHolder holderEvents = new ServletHolder("ws-events", GameServlet.class);
         context.addServlet(holderEvents, "/events/*");
+        ServletHolder jerseyServlet = context.addServlet(
+                org.glassfish.jersey.servlet.ServletContainer.class, "/*");
+
+        jerseyServlet.setInitOrder(0);
+
+        jerseyServlet.setInitParameter(
+                "jersey.config.server.provider.packages",
+                "ru.atom.game.game"
+        );
+
+        Thread tickerStart = new Thread(new TickerStart());
+        tickerStart.setName("game-server");
+        tickerStart.start();
 
         try {
             server.start();
-            gameSession = new GameSession();
-            Ticker ticker = new Ticker(gameSession);
-            ticker.loop();
             server.dump(System.err);
             server.join();
         } catch (Throwable t) {

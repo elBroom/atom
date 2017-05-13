@@ -1,9 +1,10 @@
-package ru.atom.game.model;
+package ru.atom.game.game;
 
 import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.atom.game.geometry.Point;
+import ru.atom.game.model.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

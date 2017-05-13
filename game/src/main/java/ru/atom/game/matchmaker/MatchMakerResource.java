@@ -13,7 +13,7 @@ import ru.atom.game.model.Game;
 import ru.atom.game.model.Score;
 import ru.atom.game.model.Token;
 import ru.atom.game.model.User;
-import ru.atom.game.util.ThreadSafeQueue;
+import ru.atom.game.util.ThreadSafeQueueUser;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
@@ -43,7 +43,7 @@ public class MatchMakerResource {
                 log.info("Token not found");
                 response = Response.status(Response.Status.BAD_REQUEST).build();
             } else {
-                ThreadSafeQueue.getInstance().offer(token.getUser());
+                ThreadSafeQueueUser.getInstance().offer(token.getUser());
                 while (MatchMaker.getLink(token.getUser()) == null);
                 response = Response.ok("localhost:8090/game/?id=" + MatchMaker.popLink(token.getUser())).build();
             }

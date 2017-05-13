@@ -1,40 +1,35 @@
 package ru.atom.game.game;
 
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
-import ru.atom.game.message.Topic;
-import ru.atom.game.message.Message;
-import ru.atom.game.util.JsonHelper;
+import com.google.gson.Gson;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.net.URI;
-import java.util.concurrent.Future;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GameClient {
-    public static void main(String[] args) {
-        URI uri = URI.create("ws://wtfis.ru:8090/events/");//CHANGE TO wtfis.ru for task
+    private static final Logger log = LogManager.getLogger(GameClient.class);
 
-        WebSocketClient client = new WebSocketClient();
-        //client.setMasker(new ZeroMasker());
-        try {
-            try {
-                client.start();
-                // The socket that receives events
-                GameHandler socket = new GameHandler();
-                // Attempt Connect
-                Future<Session> fut = client.connect(socket, uri);
-                // Wait for Connect
-                Session session = fut.get();
-                // Send a message
-                Message message = new Message(Topic.HELLO, "Hitler");
-                //TODO TASK: implement sending Message with type HELLO and your name as
-                session.getRemote().sendString(JsonHelper.toJson(message));
-                // Close session
-                session.close();
-            } finally {
-                client.stop();
-            }
-        } catch (Throwable t) {
-            t.printStackTrace(System.err);
+    public static LinkedList<String> createGameSession(String address, String key) throws IOException {
+        log.info("Build request to gs by address: {}", "http://"+address+"/createGame");
+        MediaType mediaType = MediaType.parse("text/plain");
+        RequestBody requestBody = RequestBody.create(mediaType, key);
+        Request request = new Request.Builder().post(requestBody)
+                .url("http://"+address+"/createGame").build();
+        Response response = new OkHttpClient().newCall(request).execute();
+        
+        log.info("parse response");
+        Gson gson = new Gson();
+        LinkedList<String> links = new LinkedList<>();
+        for (Object link: gson.fromJson(response.body().string(), List.class)) {
+            links.add((String) link);
         }
+        return links;
     }
 }

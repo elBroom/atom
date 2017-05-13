@@ -2,6 +2,7 @@ package ru.atom.game.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.atom.game.game.GameSession;
 import ru.atom.game.geometry.Point;
 
 
