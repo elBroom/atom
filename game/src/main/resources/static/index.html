@@ -43,8 +43,7 @@
         };
 
         $.ajax(settings).done(function(response) {
-           // window.location = response;
-           console.log(response);
+           window.location = response;
         }).fail(function (jqXHR, textStatus) {
             alert(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
             console.log(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);

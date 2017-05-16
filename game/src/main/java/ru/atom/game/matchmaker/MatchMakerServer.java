@@ -4,10 +4,8 @@ import javafx.util.Pair;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.atom.game.auth.CrossBrowserFilter;
 import ru.atom.game.dao.Database;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 

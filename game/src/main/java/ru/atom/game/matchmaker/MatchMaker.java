@@ -10,6 +10,7 @@ import ru.atom.game.util.ThreadSafeQueueUser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -62,9 +63,19 @@ public class MatchMaker implements Runnable {
     }
 
     public static Pair<String, String> popLink(User user) {
-        Pair<String, String> link = memory.get(user);
-        memory.remove(user);
-        return link;
+        return memory.remove(user);
+    }
+
+    public static Optional<Pair<String, String>> tryPopLink(User user, int attemps) {
+        Pair<String, String> link = null;
+        try {
+            while (null == (link = getLink(user)) && attemps-- > 0) {
+                Thread.sleep(100);
+            }
+        } catch (InterruptedException ignored) {
+        }
+
+        return Optional.ofNullable(link);
     }
 
 }

@@ -34,7 +34,7 @@ public class Broker {
         if (message.getTopic() == Topic.PLANT_BOMB) {
             gameSession.addAction(GameSession.Action.PLANT_BOMB, playerId);
             log.info("receive [" + Topic.PLANT_BOMB + "] message: " + message.getData());
-        } else if(message.getTopic() == Topic.MOVE) {
+        } else if (message.getTopic() == Topic.MOVE) {
             HashMap<String, String> data = JsonHelper.fromJson(message.getData(), HashMap.class);
             if (data.get("direction").equals(Movable.Direction.UP.name())) {
                 gameSession.addAction(GameSession.Action.MOVE_UP, playerId);
