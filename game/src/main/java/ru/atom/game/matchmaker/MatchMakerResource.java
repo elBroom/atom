@@ -47,7 +47,7 @@ public class MatchMakerResource {
                 response = Response.status(Response.Status.BAD_REQUEST).build();
             } else {
                 ThreadSafeQueueUser.getInstance().offer(token.getUser());
-                Optional<Pair<String, String>> link = MatchMaker.tryPopLink(token.getUser(), 100);
+                Optional<Pair<String, String>> link = MatchMaker.tryPopLink(token.getUser(), 1000);
                 if(link.isPresent()) {
                     Game game = new Game().setSublink(link.get().getValue()).setUser(token.getUser());
                     GameDao.getInstance().insert(session, game);

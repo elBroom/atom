@@ -36,7 +36,7 @@
         var settings = {
             "method": "POST",
             "crossDomain": true,
-            "url": location.hostname + ":8080/mm/join",
+            "url": "http://" +  location.hostname + ":8080/mm/join",
             headers: {
                 'Authorization': 'Bearer ' + Cookies.get('token')
             }

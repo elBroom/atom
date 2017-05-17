@@ -15,6 +15,7 @@ public final class TestGameSessionCreator {
     private TestGameSessionCreator() {
     }
 
+
     static GameSession createGameSession() {
         GameSession gameSession = new GameSession();
         //TODO populate your game session with sample objects

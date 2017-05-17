@@ -3,6 +3,7 @@ package ru.atom.game.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.atom.game.game.GameSession;
+import ru.atom.game.geometry.Bar;
 import ru.atom.game.geometry.Point;
 
 
@@ -15,10 +16,13 @@ public class Wall implements Positionable, Tickable {
     private Point position;
     private long lifeTime;
     private String type = "Wall";
+    private Bar bar;
 
     public Wall(Point position) {
         this.id = GameSession.createId();
         this.position = position;
+        this.bar = new Bar(new Point(position.getX() * sizeTile, position.getY() * sizeTile),
+                new Point(position.getX() * sizeTile + sizeTile, position.getY() * sizeTile + sizeTile));
         log.info("create object id={}, x={}, y={}", id, position.getX(), position.getY());
     }
 
@@ -35,6 +39,16 @@ public class Wall implements Positionable, Tickable {
     @Override
     public Point getPosition() {
         return position;
+    }
+
+    @Override
+    public Bar getBar() {
+        return bar;
+    }
+
+    @Override
+    public void setPosition(Point position) {
+        this.position = position;
     }
 
     @Override

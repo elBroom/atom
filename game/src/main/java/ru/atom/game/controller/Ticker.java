@@ -30,6 +30,7 @@ public class Ticker implements Runnable{
             Session sess = itr.next();
             Broker.getInstance().send(sess, Topic.POSSESS, ConnectionPool.getInstance().getPlayerId(sess));
         }
+        log.info("init game session");
     }
 
     public void loop() {

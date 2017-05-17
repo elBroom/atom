@@ -63,9 +63,7 @@ public class GameServer {
         ResourceHandler handler = new ResourceHandler();
         handler.setWelcomeFiles(new String[]{"index.html"});
 
-        // Хорошо бы сделать так
-        // String serverRoot = GameServer.class.getResource("/front").toString();
-        String serverRoot = "/home/zarina/technoatom/java/atom/bomberman/frontend/src/main/webapp";
+        String serverRoot = GameServer.class.getResource("/front").toString();
         handler.setResourceBase(serverRoot);
         context.setHandler(handler);
         return context;

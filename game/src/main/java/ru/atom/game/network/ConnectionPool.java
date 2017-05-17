@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.jetbrains.annotations.NotNull;
 import ru.atom.game.game.GameSession;
 
@@ -32,6 +33,7 @@ public class ConnectionPool {
             try {
                 session.getRemote().sendString(msg);
             } catch (IOException ignored) {
+            } catch (WebSocketException ignored) {
             }
         }
     }

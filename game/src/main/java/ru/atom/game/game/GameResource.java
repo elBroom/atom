@@ -26,7 +26,7 @@ public class GameResource {
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/createGame")
-    public Response finish(String key) {
+    public Response start(String key) {
         if (GameServer.KEY.equals(key)) {
             Gson gson = new Gson();
             LinkedList<String> links = new LinkedList<>();

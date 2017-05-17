@@ -3,6 +3,7 @@ package ru.atom.game.game;
 import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.atom.game.geometry.Bar;
 import ru.atom.game.geometry.Point;
 import ru.atom.game.model.*;
 
@@ -72,8 +73,9 @@ public class GameSession implements Tickable {
 
     @Override
     public void tick(long elapsed) {
-        log.info("tick");
+//        log.info("tick");
         ArrayList<Temporary> dead = new ArrayList<>();
+        ArrayList<GameObject> newObjects = new ArrayList<>();
         for (GameObject gameObject : gameObjects) {
             if (gameObject instanceof Tickable) {
                 ((Tickable) gameObject).tick(elapsed);
@@ -86,18 +88,11 @@ public class GameSession implements Tickable {
             // TODO reaction on action
             for (Pair pair: actions) {
                 if (gameObject instanceof Movable && gameObject.getId() == (Integer) pair.getValue()) {
-                    switch ((Action) pair.getKey()) {
-                        case MOVE_UP:
-                            ((Movable) gameObject).move(Movable.Direction.UP);
-                            break;
-                        case MOVE_DOWN:
-                            ((Movable) gameObject).move(Movable.Direction.DOWN);
-                            break;
-                        case MOVE_RIGHT:
-                            ((Movable) gameObject).move(Movable.Direction.RIGHT);
-                            break;
-                        case MOVE_LEFT:
-                            ((Movable) gameObject).move(Movable.Direction.LEFT);
+                    Action action = (Action) pair.getKey();
+                    move(gameObject, action);
+                    switch (action) {
+                        case PLANT_BOMB:
+                            newObjects.add(((Player) gameObject).plantBomb());
                             break;
                         default:
                             log.warn("Illegal action {}", pair.getKey().toString());
@@ -105,11 +100,42 @@ public class GameSession implements Tickable {
                 }
             }
         }
+        gameObjects.addAll(newObjects);
         gameObjects.removeAll(dead);
         actions.clear();
     }
 
     public void addAction(Action action, Integer playerId) {
         actions.add(new Pair<>(action, playerId));
+    }
+
+    private void move(GameObject gameObject, Action action) {
+        Point prevPosition = ((Positionable) gameObject).getPosition();
+        switch (action) {
+            case MOVE_UP:
+                ((Movable) gameObject).move(Movable.Direction.UP);
+                break;
+            case MOVE_DOWN:
+                ((Movable) gameObject).move(Movable.Direction.DOWN);
+                break;
+            case MOVE_RIGHT:
+                ((Movable) gameObject).move(Movable.Direction.RIGHT);
+                break;
+            case MOVE_LEFT:
+                ((Movable) gameObject).move(Movable.Direction.LEFT);
+                break;
+            default:
+                return;
+        }
+
+        Bar playerBar = ((Positionable) gameObject).getBar();
+        Boolean notCollision = gameObjects.stream()
+                .filter(_gameObject -> ((GameObject) _gameObject).getBar().isColliding(playerBar))
+                .anyMatch(_gameObject -> _gameObject instanceof Wall || _gameObject instanceof Wood);
+        if (notCollision) {
+            log.info("Collision");
+            ((Positionable) gameObject).setPosition(prevPosition);
+        }
+
     }
 }

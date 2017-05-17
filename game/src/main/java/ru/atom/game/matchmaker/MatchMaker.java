@@ -58,10 +58,6 @@ public class MatchMaker implements Runnable {
         }
     }
 
-    public static Pair<String, String> getLink(User user) {
-        return memory.get(user);
-    }
-
     public static Pair<String, String> popLink(User user) {
         return memory.remove(user);
     }
@@ -69,7 +65,7 @@ public class MatchMaker implements Runnable {
     public static Optional<Pair<String, String>> tryPopLink(User user, int attemps) {
         Pair<String, String> link = null;
         try {
-            while (null == (link = getLink(user)) && attemps-- > 0) {
+            while (null == (link = popLink(user)) && attemps-- > 0) {
                 Thread.sleep(100);
             }
         } catch (InterruptedException ignored) {

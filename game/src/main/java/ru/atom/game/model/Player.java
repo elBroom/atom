@@ -3,6 +3,7 @@ package ru.atom.game.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.atom.game.game.GameSession;
+import ru.atom.game.geometry.Bar;
 import ru.atom.game.geometry.Point;
 
 /**
@@ -16,7 +17,6 @@ public class Player implements Movable {
     private int speed;
     private long lifeTime;
     private String type = "Pawn";
-    private int sizeTile = 32;
 
     public enum PlayerType {
         BOY, GIRL
@@ -47,6 +47,18 @@ public class Player implements Movable {
     @Override
     public Point getPosition() {
         return position;
+    }
+
+    @Override
+    public Bar getBar() {
+        int delta = 4;
+        return new Bar(new Point(getPosition().getX() + delta, getPosition().getY() + delta),
+                new Point(getPosition().getX() + sizeTile - delta, getPosition().getY() + sizeTile - delta));
+    }
+
+    @Override
+    public void setPosition(Point position) {
+        this.position = position;
     }
 
     public PlayerType getPlayerType() {
@@ -85,5 +97,9 @@ public class Player implements Movable {
                 break;
         }
         return position;
+    }
+
+    public Bomb plantBomb() {
+        return new Bomb(getPosition(), 3000);
     }
 }
