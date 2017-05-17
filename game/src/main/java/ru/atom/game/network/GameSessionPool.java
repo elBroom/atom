@@ -29,17 +29,19 @@ public class GameSessionPool {
         }
     }
 
-    public GameSession getGameSession(String link) { return  pool.get(link); }
+    public GameSession getGameSession(String link) {
+        return  pool.get(link);
+    }
 
 
     public int countGameSession(GameSession gameSession) {
-        int i = 0;
+        int ind = 0;
         for (GameSession gs: pool.values()) {
             if (gs.equals(gameSession)) {
-                i++;
+                ind++;
             }
         }
-        return i;
+        return ind;
     }
 
     public void remove(String link) {

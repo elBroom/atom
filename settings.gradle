@@ -1,4 +1,3 @@
 rootProject.name = 'atom'
 
 include 'game'
-include 'bomberman/frontend'

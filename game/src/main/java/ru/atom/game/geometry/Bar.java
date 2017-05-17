@@ -26,13 +26,13 @@ public class Bar implements Collider {
         // cast from Object to Bar
         Bar other = (Bar) o;
         return this.firstPoint.equals(other.firstPoint) && this.secondPoint.equals(other.secondPoint)
-                || this.firstPoint.equals(other.secondPoint) && this.secondPoint.equals(other.firstPoint)
-                // different X
-                || this.secondPoint.getX() == other.firstPoint.getX() && this.secondPoint.getY() == other.secondPoint.getY()
-                && this.firstPoint.getX() == other.secondPoint.getX() && this.firstPoint.getY() == other.firstPoint.getY()
-                // different Y
-                || this.secondPoint.getX() == other.secondPoint.getX() && this.secondPoint.getY() == other.firstPoint.getY()
-                && this.firstPoint.getX() == other.firstPoint.getX() && this.firstPoint.getY() == other.secondPoint.getY();
+            || this.firstPoint.equals(other.secondPoint) && this.secondPoint.equals(other.firstPoint)
+            // different X
+            || this.secondPoint.getX() == other.firstPoint.getX() && this.secondPoint.getY() == other.secondPoint.getY()
+            && this.firstPoint.getX() == other.secondPoint.getX() && this.firstPoint.getY() == other.firstPoint.getY()
+            // different Y
+            || this.secondPoint.getX() == other.secondPoint.getX() && this.secondPoint.getY() == other.firstPoint.getY()
+            && this.firstPoint.getX() == other.firstPoint.getX() && this.firstPoint.getY() == other.secondPoint.getY();
     }
 
     @Override

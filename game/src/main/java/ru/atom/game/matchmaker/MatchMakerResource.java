@@ -9,7 +9,9 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import ru.atom.game.auth.Authorized;
-import ru.atom.game.dao.*;
+import ru.atom.game.dao.Database;
+import ru.atom.game.dao.GameDao;
+import ru.atom.game.dao.TokenDao;
 import ru.atom.game.model.Game;
 import ru.atom.game.model.Token;
 import ru.atom.game.util.ThreadSafeQueueUser;
@@ -48,7 +50,7 @@ public class MatchMakerResource {
             } else {
                 ThreadSafeQueueUser.getInstance().offer(token.getUser());
                 Optional<Pair<String, String>> link = MatchMaker.tryPopLink(token.getUser(), 1000);
-                if(link.isPresent()) {
+                if (link.isPresent()) {
                     Game game = new Game().setSublink(link.get().getValue()).setUser(token.getUser());
                     GameDao.getInstance().insert(session, game);
                     response = Response
@@ -86,18 +88,18 @@ public class MatchMakerResource {
         Transaction txn = null;
         try (Session session = Database.session()) {
             txn = session.beginTransaction();
-                for (Map.Entry<String, JsonElement> result : jobj.get("result").getAsJsonObject().entrySet()) {
-                    Game game = GameDao.getInstance().getBySublink(session, result.getKey());
-                    if (game == null) {
-                        log.info("Game with sublink  " + result.getKey() + " not found");
-                        txn.rollback();
-                        return Response.status(Response.Status.BAD_REQUEST).build();
-                    } else {
-                        game.setScore(result.getValue().getAsInt());
-                        GameDao.getInstance().update(session, game);
-                    }
+            for (Map.Entry<String, JsonElement> result : jobj.get("result").getAsJsonObject().entrySet()) {
+                Game game = GameDao.getInstance().getBySublink(session, result.getKey());
+                if (game == null) {
+                    log.info("Game with sublink  " + result.getKey() + " not found");
+                    txn.rollback();
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                } else {
+                    game.setScore(result.getValue().getAsInt());
+                    GameDao.getInstance().update(session, game);
                 }
-                response = Response.ok("ok").build();
+            }
+            response = Response.ok("ok").build();
             txn.commit();
         } catch (RuntimeException e) {
             log.error("Transaction failed.", e);

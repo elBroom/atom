@@ -44,7 +44,9 @@ public class MatchMaker implements Runnable {
                 try {
                     log.info("Get link from {}", gsInfo.getValue());
                     links = GameClient.createGameSession(gsInfo.getValue(), gsInfo.getKey());
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                    log.info("IOException");
+                }
                 if (links.isEmpty()) {
                     log.info("Links Empty");
                 } else {

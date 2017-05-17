@@ -17,11 +17,11 @@ public class GameClient {
     private static final Logger log = LogManager.getLogger(GameClient.class);
 
     public static LinkedList<String> createGameSession(String address, String key) throws IOException {
-        log.info("Build request to gs by address: {}", "http://"+address+"/createGame");
+        log.info("Build request to gs by address: {}", "http://" + address + "/createGame");
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody requestBody = RequestBody.create(mediaType, key);
         Request request = new Request.Builder().post(requestBody)
-                .url("http://"+address+"/createGame").build();
+                .url("http://" + address + "/createGame").build();
         Response response = new OkHttpClient().newCall(request).execute();
         
         log.info("parse response");

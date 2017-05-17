@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
-public class Ticker implements Runnable{
+public class Ticker implements Runnable {
     private static final Logger log = LogManager.getLogger(Ticker.class);
     private static final int FPS = 60;
     private static final long FRAME_TIME = 1000 / FPS;
@@ -39,12 +39,12 @@ public class Ticker implements Runnable{
             act(FRAME_TIME);
             long elapsed = System.currentTimeMillis() - started;
             if (elapsed < FRAME_TIME) {
-//                log.info("All tick finish at {} ms", elapsed);
+                log.info("All tick finish at {} ms", elapsed);
                 LockSupport.parkNanos(TimeUnit.MILLISECONDS.toNanos(FRAME_TIME - elapsed));
             } else {
-//                log.warn("tick lag {} ms", elapsed - FRAME_TIME);
+                log.warn("tick lag {} ms", elapsed - FRAME_TIME);
             }
-//            log.info("{}: tick ", tickNumber);
+            log.info("{}: tick ", tickNumber);
             tickNumber++;
         }
     }

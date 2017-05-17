@@ -5,7 +5,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.atom.game.geometry.Bar;
 import ru.atom.game.geometry.Point;
-import ru.atom.game.model.*;
+import ru.atom.game.model.GameObject;
+import ru.atom.game.model.Player;
+import ru.atom.game.model.Tickable;
+import ru.atom.game.model.Wall;
+import ru.atom.game.model.Wood;
+import ru.atom.game.model.Temporary;
+import ru.atom.game.model.Movable;
+import ru.atom.game.model.Positionable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -21,6 +28,7 @@ public class GameSession implements Tickable {
     private List<Player> players = new ArrayList<>();
 
     private Set<Pair<Action, Integer>> actions = new LinkedHashSet<>();
+
     public enum Action {
         PLANT_BOMB, MOVE_UP, MOVE_DOWN, MOVE_RIGHT, MOVE_LEFT, MOVE_IDLE,
     }
@@ -47,7 +55,7 @@ public class GameSession implements Tickable {
                 if (x % 2 == 0 && y % 2 == 0 || y == 0 || y == MAX_Y - 1 || x == 0 || x == MAX_X - 1) {
                     // Create Wall
                     addGameObject(new Wall(new Point(x, y)));
-                } else if (!((x == 1 || x == MAX_X - 2) && (y < 3 || y > MAX_Y - 4) || (x == 2 || x== MAX_X - 3)
+                } else if (!((x == 1 || x == MAX_X - 2) && (y < 3 || y > MAX_Y - 4) || (x == 2 || x == MAX_X - 3)
                         && (y == 1 || y == MAX_Y - 2)))  {
                     // Create Wood
                     addGameObject(new Wood(new Point(x, y)));
@@ -73,7 +81,6 @@ public class GameSession implements Tickable {
 
     @Override
     public void tick(long elapsed) {
-//        log.info("tick");
         ArrayList<Temporary> dead = new ArrayList<>();
         ArrayList<GameObject> newObjects = new ArrayList<>();
         for (GameObject gameObject : gameObjects) {
