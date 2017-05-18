@@ -19,7 +19,9 @@ dependencies {
 
 jar {
     from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest { attributes 'Main-Class': 'ru.atom.game.game.GameServer' }
+    // manifest { attributes 'Main-Class': 'ru.atom.game.game.GameServer' }
+    // manifest { attributes 'Main-Class': 'ru.atom.game.matchmaker.MatchMakerServer' }
+    manifest { attributes 'Main-Class': 'ru.atom.game.auth.AuthServer' }
 }
 
 

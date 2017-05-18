@@ -13,7 +13,7 @@ public class MatchMakerServer {
     private static ConcurrentHashMap<String, Pair<String, String>> gameServers = new ConcurrentHashMap<>();
 
     public static void init() {
-        gameServers.put("gs0", new Pair<>("key12345678", "localhost:8090"));
+        gameServers.put("gs0", new Pair<>("key12345678", "10.3.13.160:8090"));
     }
 
     public static Pair<String, String> getGameServer() {

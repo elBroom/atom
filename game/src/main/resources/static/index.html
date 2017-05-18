@@ -6,7 +6,7 @@
     <!--<div id="authorizeUser"  style="display: none;">-->
         <h2>Welcome back, <p id="username"></p></h2>
 
-        <button type="button" style="font-size:large" onclick="newGame()" >New Game</button>
+        <button id="newGame" type="button" style="font-size:large" onclick="newGame()" >New Game</button>
         <br>
         <button type="button" class="logoutButton" style="font-size:large" onclick="logout()" >Logout</button>
     <!--</div>-->
@@ -33,21 +33,25 @@
             window.location = "/login.html";
         }
 
-        var settings = {
-            "method": "POST",
-            "crossDomain": true,
-            "url": "http://" +  location.hostname + ":8080/mm/join",
-            headers: {
-                'Authorization': 'Bearer ' + Cookies.get('token')
-            }
-        };
+        if (!$('#newGame').hasClass('disable')) {
+            var settings = {
+                "method": "POST",
+                "crossDomain": true,
+                "url": "http://" +  location.hostname + ":8080/mm/join",
+                headers: {
+                    'Authorization': 'Bearer ' + Cookies.get('token')
+                }
+            };
 
-        $.ajax(settings).done(function(response) {
-           window.location = response;
-        }).fail(function (jqXHR, textStatus) {
-            alert(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
-            console.log(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
-        });
+            $.ajax(settings).done(function(response) {
+               window.location = response;
+            }).fail(function (jqXHR, textStatus) {
+                alert(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
+                console.log(jqXHR.status + " " + jqXHR.statusText + ". " + jqXHR.responseText);
+            });
+        }
+        $('#newGame').addClass('disable');
+        return false;
     }
 </script>
 
